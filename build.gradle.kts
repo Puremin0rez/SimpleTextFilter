@@ -1,0 +1,41 @@
+plugins {
+    id("java")
+}
+
+group = "com.dethemium"
+version = "1.0"
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(8))
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
+    maven("https://oss.sonatype.org/content/repositories/snapshots/")
+}
+
+dependencies {
+    compileOnly(group = "org.spigotmc", name = "spigot-api", version = "1.8-R0.1-SNAPSHOT")
+}
+
+defaultTasks("clean", "build")
+
+tasks {
+    processResources {
+        val placeholders = mapOf(
+            "name" to project.name,
+            "group" to project.group,
+            "version" to project.version
+        )
+        filesMatching("plugin.yml") {
+            expand(placeholders)
+        }
+    }
+
+    jar {
+        archiveFileName.set("${project.name}.jar")
+    }
+}
